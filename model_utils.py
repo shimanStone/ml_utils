@@ -31,14 +31,14 @@ def get_accuracy(y_hat, y):
     """compute the number of correct predictions"""
 
     if len(y_hat.shape) > 1 and y_hat.shape[1] > 1:
-        y_hat = torch.argmax(y_hat, axis=1)
+        y_hat = torch.argmax(y_hat, dim=1)
     cmp = astype(y_hat, y.dtype) == y
     sum = reduce_sum(astype(cmp, y.dtype))
 
     return float(sum)
 
 
-def evaluate_accuracy(net, data_iter):
+def evaluate_accuracy(net, data_iter, device):
     """compute the accuracy for a model on a dataset"""
 
     if isinstance(net, torch.nn.Module):
@@ -46,6 +46,7 @@ def evaluate_accuracy(net, data_iter):
     metric = Accumulator(2)
     with torch.no_grad():
         for X, y in data_iter:
+            X, y = X.to(device), y.to(device)
             metric.add(get_accuracy(net(y), y), y.size())
     return metric[0]/metric[1]
 
