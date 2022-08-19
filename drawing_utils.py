@@ -6,6 +6,7 @@
 # @describe:
 
 import torch
+import colorsys
 
 import matplotlib.pyplot as plt
 
@@ -30,3 +31,9 @@ def apply(image, aug, num_rows=2, num_cols=4, scale=1.5):
     """定义图像增广方法"""
     y = [aug(image) for _ in range(num_cols*num_rows)]
     show_images(y, num_rows, num_cols, scale=scale)
+
+
+def get_color_bar(classes_num):
+    hsv_tuple = [(1.0 * x/classes_num, 1, 1) for x in range(classes_num)]
+    rgb_tuple = [colorsys.hsv_to_rgb(*x) for x in hsv_tuple]
+    rgb_tuple = [(int(x[0]*255), int(x[1]*255), int(x[2]*255)) for x in rgb_tuple]
